@@ -1,5 +1,6 @@
 package screens;
 
+import controllers.MercadoriaController;
 import functions.ConvertToEnum;
 import functions.ConvertFromEnum;
 import functions.VerifyPK;
@@ -28,8 +29,6 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import tools.CaixaDeFerramentas;
 import tools.Tools;
 import enums.DialogMessageType;
-import enums.DialogConfirmType;
-import daos.DAOMercadoria;
 import java.util.Date;
 import models.Mercadoria;
 
@@ -79,16 +78,14 @@ public class MercadoriaScreen extends JDialog {
     JButton btnCreate = new JButton("Create");
     JButton btnRetrieve = new JButton("Retrieve");
     JButton btnUpdate = new JButton("Update");
-    JButton btnDelete = new JButton("Delete");
     JButton btnAction = new JButton("Add to List");
-    JButton btnRemove = new JButton("Remove");
     JButton btnCancel = new JButton("Cancel");
     JButton btnList = new JButton("List");
 
 //INSTANCIA DOS CONTROLLERS
     String actionController;
     boolean listController = false;
-    DAOMercadoria mercadoriaController = new DAOMercadoria();
+    MercadoriaController mercadoriaController = new MercadoriaController();
 
 //INSTANCIA DOS LABELS
     JLabel lblId = new JLabel("ID");
@@ -136,7 +133,6 @@ public class MercadoriaScreen extends JDialog {
         panNorth.add(btnRetrieve);
         panNorth.add(btnCreate);
         panNorth.add(btnUpdate);
-        panNorth.add(btnDelete);
         panNorth.add(btnList);
         panNorth.add(btnCancel);
         //PAN EAST CONFIGURATIONS
@@ -182,7 +178,6 @@ public class MercadoriaScreen extends JDialog {
                             btnCreate.setVisible(true);
                             btnUpdate.setEnabled(true);
                             btnUpdate.setVisible(true);
-                            btnDelete.setEnabled(true);
 
                             txtIdCriador.setEditable(false);
                             txtDescricao.setEditable(false);
@@ -196,7 +191,6 @@ public class MercadoriaScreen extends JDialog {
                             btnCreate.setEnabled(true);
                             btnCreate.setVisible(true);
                             btnUpdate.setEnabled(false);
-                            btnDelete.setEnabled(false);
 
                             txtIdCriador.setEditable(true);
                             txtDescricao.setEditable(true);
@@ -223,7 +217,6 @@ public class MercadoriaScreen extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 btnRetrieve.setEnabled(false);
                 btnUpdate.setEnabled(false);
-                btnDelete.setEnabled(false);
                 btnCreate.setVisible(false);
                 btnCancel.setVisible(true);
                 btnAction.setVisible(true);
@@ -243,7 +236,6 @@ public class MercadoriaScreen extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 btnRetrieve.setEnabled(false);
                 btnUpdate.setEnabled(false);
-                btnDelete.setEnabled(false);
                 btnCreate.setVisible(false);
                 btnCancel.setVisible(true);
                 btnAction.setVisible(true);
@@ -321,44 +313,6 @@ public class MercadoriaScreen extends JDialog {
             }
         });
 
-        //BTN DELETE ACTION LISTENER
-        btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                confirmDialog = new BuildConfirmDialog(
-                        DialogConfirmType.YES_NO,
-                        "Deseja realmente excluir estes dados da lista?",
-                        "Confirmar Exclusão");
-
-                int response = confirmDialog.getResponse();
-
-                if (response == JOptionPane.YES_OPTION) {
-                    btnRetrieve.setEnabled(false);
-                    btnUpdate.setEnabled(false);
-                    btnDelete.setEnabled(false);
-                    btnCreate.setEnabled(false);
-
-                    actionController = "DELETE";
-                    btnAction.setVisible(false);
-                    btnRetrieve.setEnabled(true);
-
-                    txtId.setEditable(true);
-                    textFieldInitialConfiguration();
-                    txtId.requestFocus();
-
-                    clearAllFields();
-                    mercadoriaController.delete(mercadoria);
-
-                    messageDialog = new BuildMessageDialog(
-                            DialogMessageType.SUCESS,
-                            "MERCADORIA EXCLUÍDO COM SUCESSO",
-                            "DELETE",
-                            container);
-                    System.out.println("MERCADORIA EXCLUÍDO");
-                }
-            }
-        });
-
         //BTN LIST ACTION LISTENER
         btnList.addActionListener(new ActionListener() {
             @Override
@@ -414,7 +368,6 @@ public class MercadoriaScreen extends JDialog {
         btnCreate.setEnabled(false);
         btnAction.setVisible(false);
         btnUpdate.setEnabled(false);
-        btnDelete.setEnabled(false);
     }
 
     private void textFieldInitialConfiguration() {	//TEXTFIELD INITIAL CONFIGURATIONS
