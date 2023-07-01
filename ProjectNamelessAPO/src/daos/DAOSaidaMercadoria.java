@@ -3,19 +3,19 @@ package daos;
 import java.util.ArrayList;
 import java.util.List;
 import tools.ManipulaArquivo;
-import models.Funcionario;
+import models.SaidaMercadoria;
 
 /**
  *
  * @author afmireski
  */
-public class DAOFuncionario extends DAOGeneric<Funcionario> {
-
-    public DAOFuncionario() {
+public class DAOSaidaMercadoria extends DAOGeneric<SaidaMercadoria>{
+    
+    public DAOSaidaMercadoria() {
     }
 
     @Override
-    public Funcionario retrieve(String id) {
+    public SaidaMercadoria retrieve(String id) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getId().equals(id)) {
                 return list.get(i);
@@ -28,13 +28,13 @@ public class DAOFuncionario extends DAOGeneric<Funcionario> {
     public List<String> getFkList() {
         //GERA UMA LISTA DE STRINGS EM FORMA DE CHAVE ESTRAGEIRA
         List<String> fks = new ArrayList<>();
-        for (Funcionario funcionario : list) {
-            String fk = funcionario.toFk();
+        for (SaidaMercadoria saidaMercadoria : list) {
+            String fk = saidaMercadoria.toFk();
             fks.add(fk);
         }
         return fks;
     }
-
+    
     @Override
     public void loadData(String path) {
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
@@ -43,19 +43,18 @@ public class DAOFuncionario extends DAOGeneric<Funcionario> {
         }
 
         List<String> stringList = manipulaArquivo.abrirArquivo(path);
-        //converter de CSV para Funcionario
-        Funcionario funcionario;
+        //converter de CSV para SaidaMercadoria
+        SaidaMercadoria saidaMercadoria;
         for (String string : stringList) {
             String aux[] = string.split(";");
-            funcionario = new Funcionario(
+            saidaMercadoria = new SaidaMercadoria(
                     aux[0], //id
-                    aux[1], //nome
-                    aux[2], //departamento
-                    cf.converteDeStringParaDate(aux[3]), //dataCadastro
-                    cf.converteDeStringParaDate(aux[4]), //dataAtualizacao
-                    cf.converteDeStringParaDate(aux[5]) //dataExclusao
+                    aux[1], //idMercadoria
+                    aux[2], //idCriador
+                    Integer.valueOf(aux[3]), //quantidadeSaida
+                    cf.converteDeStringParaDate(aux[4]) //dataSaida
             );
-            list.add(funcionario);
+            list.add(saidaMercadoria);
         }
     }
 }

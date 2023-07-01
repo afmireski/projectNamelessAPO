@@ -1,8 +1,5 @@
 package screens;
 
-import functions.ConvertToEnum;
-import functions.ConvertFromEnum;
-import functions.VerifyPK;
 import helpers.BuildConfirmDialog;
 import helpers.BuildMessageDialog;
 import helpers.ErrorTools;
@@ -16,28 +13,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Date;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import tools.CaixaDeFerramentas;
-import tools.Tools;
 import enums.DialogMessageType;
-import enums.DialogConfirmType;
-import daos.DAOFuncionario;
-import models.Funcionario;
+import daos.DAOSaidaMercadoria;
+import models.SaidaMercadoria;
 
 /**
  *
  * @author afmireski
  */
-public class FuncionarioScreen extends JDialog {
+public class SaidaMercadoriaScreen extends JDialog {
 
 //INSTANCIA DOS HELPERS
     GenericComponents components = new GenericComponents();
@@ -46,9 +39,9 @@ public class FuncionarioScreen extends JDialog {
     ErrorTools errorTools = new ErrorTools();
 
 //INSTANCIA DOS FUNCTIONS
+
 //INSTANCIA DAS TOOLS
     final private CaixaDeFerramentas cf = new CaixaDeFerramentas();
-    Tools tools = new Tools();
 
 //INSTANCIA DOS CONTAINERS
     Container container;
@@ -68,12 +61,12 @@ public class FuncionarioScreen extends JDialog {
     JPanel panL2C2 = new JPanel(); //Painel referente a posição da grade: Linha 2 - Coluna 2
     JPanel panL3C1 = new JPanel(); //Painel referente a posição da grade: Linha 3 - Coluna 1
     JPanel panL3C2 = new JPanel(); //Painel referente a posição da grade: Linha 3 - Coluna 2
+    JPanel panL4C1 = new JPanel(); //Painel referente a posição da grade: Linha 4 - Coluna 1
+    JPanel panL4C2 = new JPanel(); //Painel referente a posição da grade: Linha 4 - Coluna 2
 
 //INSTANCIA DOS BUTTONS
     JButton btnCreate = new JButton("Create");
     JButton btnRetrieve = new JButton("Retrieve");
-    JButton btnUpdate = new JButton("Update");
-    JButton btnDelete = new JButton("Delete");
     JButton btnAction = new JButton("Add to List");
     JButton btnCancel = new JButton("Cancel");
     JButton btnList = new JButton("List");
@@ -81,31 +74,33 @@ public class FuncionarioScreen extends JDialog {
 //INSTANCIA DOS CONTROLLERS
     String actionController;
     boolean listController = false;
-    DAOFuncionario funcionarioController = new DAOFuncionario();
+    DAOSaidaMercadoria daoSaidaMercadoria = new DAOSaidaMercadoria();
 
 //INSTANCIA DOS LABELS
     JLabel lblId = new JLabel("ID");
-    JLabel lblNome = new JLabel("NOME");
-    JLabel lblDepartamento = new JLabel("DEPARTAMENTO");
+    JLabel lblIdMercadoria = new JLabel("ID MERCADORIA");
+    JLabel lblIdCriador = new JLabel("ID CRIADOR");
+    JLabel lblQuantidadeSaida = new JLabel("QUANTIDA DE SAIDA");
 
 //INSTANCIA DOS TEXTFIELD
     JTextField txtId = new JTextField(16);
-    JTextField txtNome = new JTextField(16);
-    JTextField txtDepartamento = new JTextField(16);
+    JTextField txtIdMercadoria = new JTextField(16);
+    JTextField txtIdCriador = new JTextField(16);
+    JTextField txtQuantidadeSaida = new JTextField(5);
 
 //INSTANCIA DAS ENTIDADES
-    Funcionario funcionario = new Funcionario();
+    SaidaMercadoria saidaMercadoria = new SaidaMercadoria();
 //INSTANCIA DAS TABLE SCREENS
-    FuncionarioTableScreen funcionarioTableScreen;
+    SaidaMercadoriaTableScreen saidaMercadoriaTableScreen;
 
-    public FuncionarioScreen() {
+    public SaidaMercadoriaScreen() {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setTitle("CRUD - FUNCIONARIO");
+        setTitle("CRUD - SAIDAMERCADORIA");
 
         //LOAD DATA
-        final String path = "Funcionario.csv";
-        funcionarioController.loadData(path);
+        final String path = "SaidaMercadoria.csv";
+        daoSaidaMercadoria.loadData(path);
 
         buttonsInitialConfiguration();
         textFieldInitialConfiguration();
@@ -126,8 +121,6 @@ public class FuncionarioScreen extends JDialog {
 
         panNorth.add(btnRetrieve);
         panNorth.add(btnCreate);
-        panNorth.add(btnUpdate);
-        panNorth.add(btnDelete);
         panNorth.add(btnList);
         panNorth.add(btnCancel);
         //PAN EAST CONFIGURATIONS
@@ -135,7 +128,7 @@ public class FuncionarioScreen extends JDialog {
 
         //PAN BODY CONFIGURATIONS
         panBody.setBorder(BorderFactory.createLineBorder(Color.black, 5));
-        panBody.setLayout(new GridLayout(3, 2));
+        panBody.setLayout(new GridLayout(4, 2));
 
         //Prenchimento por Linha
         panBody.add(panL1C1);
@@ -144,46 +137,52 @@ public class FuncionarioScreen extends JDialog {
         panBody.add(panL2C2);
         panBody.add(panL3C1);
         panBody.add(panL3C2);
+        panBody.add(panL4C1);
+        panBody.add(panL4C2);
 
         //Prenchimento Linha 1
-        panL1C1.add(lblNome);
-        panL1C2.add(txtNome);
+        panL1C1.add(lblIdMercadoria);
+        panL1C2.add(txtIdMercadoria);
 
         //Prenchimento Linha 2
-        panL2C1.add(lblDepartamento);
-        panL2C2.add(txtDepartamento);
+        panL2C1.add(lblIdCriador);
+        panL2C2.add(txtIdCriador);
 
-        panL3C2.add(btnAction);
+        //Prenchimento Linha 3
+        panL3C1.add(lblQuantidadeSaida);
+        panL3C2.add(txtQuantidadeSaida);
+
+        //Prenchimento Linha 4
+        panL4C2.add(btnAction);
         //BTN RETRIEVE ACTION LISTENER
         btnRetrieve.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (!txtId.getText().trim().isEmpty()) {
-                        funcionario = funcionarioController.retrieve(txtId.getText());
-                        if (funcionario != null) {
+                        saidaMercadoria = daoSaidaMercadoria.retrieve(txtId.getText());
+                        if (saidaMercadoria != null) {
                             btnCreate.setEnabled(false);
                             btnCreate.setVisible(true);
-                            btnUpdate.setEnabled(true);
-                            btnUpdate.setVisible(true);
-                            btnDelete.setEnabled(true);
 
-                            txtNome.setEditable(false);
-                            txtDepartamento.setEditable(false);
+                            txtIdMercadoria.setEditable(false);
+                            txtIdCriador.setEditable(false);
+                            txtQuantidadeSaida.setEditable(false);
 
-                            txtId.setText(String.valueOf(funcionario.getId()));
-                            txtNome.setText(String.valueOf(funcionario.getNome()));
-                            txtDepartamento.setText(String.valueOf(funcionario.getDepartamento()));
+                            txtId.setText(String.valueOf(saidaMercadoria.getId()));
+                            txtIdMercadoria.setText(String.valueOf(saidaMercadoria.getIdMercadoria()));
+                            txtIdCriador.setText(String.valueOf(saidaMercadoria.getIdCriador()));
+                            txtQuantidadeSaida.setText(String.valueOf(saidaMercadoria.getQuantidadeSaida()));
                         } else {
                             btnCreate.setEnabled(true);
                             btnCreate.setVisible(true);
-                            btnUpdate.setEnabled(false);
-                            btnDelete.setEnabled(false);
 
-                            txtNome.setEditable(true);
-                            txtDepartamento.setEditable(true);
-                            txtNome.setText("");
-                            txtDepartamento.setText("");
+                            txtIdMercadoria.setEditable(true);
+                            txtIdCriador.setEditable(true);
+                            txtQuantidadeSaida.setEditable(true);
+                            txtIdMercadoria.setText("");
+                            txtIdCriador.setText("");
+                            txtQuantidadeSaida.setText("");
                         }
                     }
                 } catch (Exception excep) {
@@ -202,40 +201,16 @@ public class FuncionarioScreen extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 btnRetrieve.setEnabled(false);
-                btnUpdate.setEnabled(false);
-                btnDelete.setEnabled(false);
                 btnCreate.setVisible(false);
                 btnCancel.setVisible(true);
                 btnAction.setVisible(true);
 
                 txtId.setEditable(false);
-                txtNome.requestFocus();
+                txtIdMercadoria.requestFocus();
 
                 actionController = "CREATE";
 
                 btnAction.setText("Adicionar à Lista");
-            }
-        });
-
-        //BTN UPDATE ACTION LISTENER
-        btnUpdate.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnRetrieve.setEnabled(false);
-                btnUpdate.setEnabled(false);
-                btnDelete.setEnabled(false);
-                btnCreate.setVisible(false);
-                btnCancel.setVisible(true);
-                btnAction.setVisible(true);
-
-                txtId.setEditable(false);
-                txtNome.setEditable(true);
-                txtDepartamento.setEditable(true);
-                txtNome.requestFocus();
-
-                actionController = "UPDATE";
-
-                btnAction.setText("Atualizar na Lista");
             }
         });
 
@@ -244,39 +219,22 @@ public class FuncionarioScreen extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (actionController.equalsIgnoreCase("CREATE")) {
-                        funcionario = new Funcionario();
-                    }
-                    Funcionario funcionarioAntigo = funcionario;
-                    if (txtNome.getText().trim().isEmpty() || txtDepartamento.getText().trim().isEmpty()) {
+                    saidaMercadoria = new SaidaMercadoria();
+                    if (txtIdMercadoria.getText().trim().isEmpty() || txtIdCriador.getText().trim().isEmpty()
+                            || txtQuantidadeSaida.getText().trim().isEmpty()) {
                         throw new Exception("Verifique se os seus campos estão preenchidos!");
+                    } else if (Integer.valueOf(txtQuantidadeSaida.getText().trim()) <= 0) {
+                        throw new Exception("A quantidade de saída deve ser maior que 0!");
                     } else {
-                        funcionario.setId(txtId.getText());
-                        funcionario.setNome(txtNome.getText());
-                        funcionario.setDepartamento(txtDepartamento.getText());
-                        funcionario.setDataAtualizacao(new Date());
-                        funcionario.setDataExclusao(null);
+                        saidaMercadoria.setId(txtId.getText());
+                        saidaMercadoria.setIdMercadoria(txtIdMercadoria.getText());
+                        saidaMercadoria.setIdCriador(txtIdCriador.getText());
                     }
-                    if (actionController.equalsIgnoreCase("CREATE")) {
-                        funcionario.setDataCadastro(new Date());
-                        System.out.println(funcionario.toString());
-                        funcionarioController.create(funcionario);
-                        System.out.println("FUNCIONARIO ADICIONADO!");
-                    } else if (actionController.equalsIgnoreCase("UPDATE")) {
-                        System.out.println("FUNCIONARIO => " + funcionario.toString());
-                        System.out.println("FUNCIONARIO ANTIGO => " + funcionarioAntigo.toString());
-                        funcionarioController.update(funcionarioAntigo, funcionario);
-                        System.out.println("LISTA ATUALIZADA!");
-                    } else {
 
-                        throw new Exception("Falha ao executar a ação na lista");
-
-                    }
+                    daoSaidaMercadoria.create(saidaMercadoria);
 
                     btnAction.setVisible(false);
                     btnRetrieve.setEnabled(true);
-                    btnUpdate.setVisible(true);
-                    btnUpdate.setEnabled(false);
                     btnCreate.setVisible(true);
                     btnCreate.setEnabled(false);
                     btnCancel.setVisible(false);
@@ -298,44 +256,6 @@ public class FuncionarioScreen extends JDialog {
             }
         });
 
-        //BTN DELETE ACTION LISTENER
-        btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                confirmDialog = new BuildConfirmDialog(
-                        DialogConfirmType.YES_NO,
-                        "Deseja realmente excluir estes dados da lista?",
-                        "Confirmar Exclusão");
-
-                int response = confirmDialog.getResponse();
-
-                if (response == JOptionPane.YES_OPTION) {
-                    btnRetrieve.setEnabled(false);
-                    btnUpdate.setEnabled(false);
-                    btnDelete.setEnabled(false);
-                    btnCreate.setEnabled(false);
-
-                    actionController = "DELETE";
-                    btnAction.setVisible(false);
-                    btnRetrieve.setEnabled(true);
-
-                    txtId.setEditable(true);
-                    textFieldInitialConfiguration();
-                    txtId.requestFocus();
-
-                    clearAllFields();
-                    funcionarioController.delete(funcionario);
-
-                    messageDialog = new BuildMessageDialog(
-                            DialogMessageType.SUCESS,
-                            "FUNCIONARIO EXCLUÍDO COM SUCESSO",
-                            "DELETE",
-                            container);
-                    System.out.println("FUNCIONARIO EXCLUÍDO");
-                }
-            }
-        });
-
         //BTN LIST ACTION LISTENER
         btnList.addActionListener(new ActionListener() {
             @Override
@@ -343,11 +263,11 @@ public class FuncionarioScreen extends JDialog {
                 // A JANELA TABELA SÓ PODE SER ABERTA SE TABLESCREEN NÃO ESTIVER ATIVA.
                 if (listController) {
                     //SE TABLE SCREEN ESTIVER ATIVA, A FECHA ANTES DE ABRIR NOVAMENTE.
-                    funcionarioTableScreen.dispose();
+                    saidaMercadoriaTableScreen.dispose();
                     listController = false;
                 }
-                List<Funcionario> funcionarios = funcionarioController.listar();
-                funcionarioTableScreen = new FuncionarioTableScreen(funcionarios);
+                List<SaidaMercadoria> saidaMercadorias = daoSaidaMercadoria.listar();
+                saidaMercadoriaTableScreen = new SaidaMercadoriaTableScreen(saidaMercadorias);
                 listController = true;
             }
         });
@@ -371,10 +291,10 @@ public class FuncionarioScreen extends JDialog {
             public void windowClosing(WindowEvent e) {
                 if (listController) {
                     //SE TABLE SCREEN ESTIVER ATIVA, A FECHA ANTES DE ABRIR NOVAMENTE.
-                    funcionarioTableScreen.dispose();
+                    saidaMercadoriaTableScreen.dispose();
                     listController = false;
                 }
-                funcionarioController.saveData(path);
+                daoSaidaMercadoria.saveData(path);
                 dispose();
             }
         });
@@ -390,21 +310,21 @@ public class FuncionarioScreen extends JDialog {
         btnList.setVisible(true);
         btnCreate.setEnabled(false);
         btnAction.setVisible(false);
-        btnUpdate.setEnabled(false);
-        btnDelete.setEnabled(false);
     }
 
     private void textFieldInitialConfiguration() {	//TEXTFIELD INITIAL CONFIGURATIONS
         txtId.setEditable(true);
-        txtNome.setEditable(false);
-        txtDepartamento.setEditable(false);
+        txtIdMercadoria.setEditable(false);
+        txtIdCriador.setEditable(false);
+        txtQuantidadeSaida.setEditable(false);
     }
 
     private void clearAllFields() {
 
         txtId.setText("");
-        txtNome.setText("");
-        txtDepartamento.setText("");
+        txtIdMercadoria.setText("");
+        txtIdCriador.setText("");
+        txtQuantidadeSaida.setText("");
     }
 
 }
