@@ -10,10 +10,10 @@ import models.Mercadoria;
  * @author afmireski
  */
 public class DAOMercadoria extends DAOGeneric<Mercadoria> {
-    
+
     public DAOMercadoria() {
     }
-    
+
     @Override
     public Mercadoria retrieve(String id) {
         for (int i = 0; i < list.size(); i++) {
@@ -23,7 +23,7 @@ public class DAOMercadoria extends DAOGeneric<Mercadoria> {
         }
         return null;
     }
-    
+
     @Override
     public List<String> getFkList() {
         //GERA UMA LISTA DE STRINGS EM FORMA DE CHAVE ESTRAGEIRA
@@ -34,14 +34,14 @@ public class DAOMercadoria extends DAOGeneric<Mercadoria> {
         }
         return fks;
     }
-    
+
     @Override
     public void loadData(String path) {
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
         if (!manipulaArquivo.existeOArquivo(path)) {
             manipulaArquivo.criarArquivoVazio(path);
         }
-        
+
         List<String> stringList = manipulaArquivo.abrirArquivo(path);
         //converter de CSV para Mercadoria
         Mercadoria mercadoria;
@@ -59,52 +59,36 @@ public class DAOMercadoria extends DAOGeneric<Mercadoria> {
             list.add(mercadoria);
         }
     }
-    
+
     public void incrementarEstoque(String idMercadoria, int quantidade) throws Exception {
-        
-        try {
-            if (quantidade < 0) {
-                throw new Exception("A quantidade não pode ser negativa!");
+        if (quantidade < 0) {
+            throw new Exception("A quantidade incrementada não pode ser negativa");
+        }
+        for (int i = 0; i < list.size(); i++) {
+            Mercadoria mercadoria = list.get(i);
+            if (mercadoria.getId().equals(idMercadoria)) {
+                int qtd = mercadoria.getQuantidadeEmEstoque() + quantidade;
+                mercadoria.setQuantidadeEmEstoque(qtd);
+                list.set(i, mercadoria);
             }
-            
-            Mercadoria mercadoria = this.retrieve(idMercadoria);
-            
-            if (mercadoria == null) {
-                throw new Exception("Mercadoria não encontrada!");
-            }
-            
-            int qtd = mercadoria.getQuantidadeEmEstoque() + quantidade;
-            Mercadoria newMercadoria = mercadoria;
-            newMercadoria.setQuantidadeEmEstoque(qtd);
-            
-            this.update(mercadoria, newMercadoria);
-        } catch (Exception e) {
-            throw e;
         }
     }
-    
+
     public void decrementarEstoque(String idMercadoria, int quantidade) throws Exception {
-        
-        try {
-            if (quantidade < 0) {
-                throw new Exception("A quantidade não pode ser negativa!");
+        if (quantidade < 0) {
+            throw new Exception("A quantidade decrementada não pode ser negativa");
+        }
+        for (int i = 0; i < list.size(); i++) {
+            Mercadoria mercadoria = list.get(i);
+            if (mercadoria.getId().equals(idMercadoria)) {
+
+                if (quantidade < mercadoria.getQuantidadeEmEstoque()) {
+                    throw new Exception("Não é possível retirar mais do que se tem em estoque");
+                }
+                int qtd = mercadoria.getQuantidadeEmEstoque() - quantidade;
+                mercadoria.setQuantidadeEmEstoque(qtd);
+                list.set(i, mercadoria);
             }
-            
-            Mercadoria mercadoria = this.retrieve(idMercadoria);
-            
-            if (mercadoria == null) {
-                throw new Exception("Mercadoria não encontrada!");
-            } else if (quantidade > mercadoria.getQuantidadeEmEstoque()) {
-                throw new Exception("A quantidade retirada não pode ser maior que o estoque!");
-            }
-            
-            int qtd = mercadoria.getQuantidadeEmEstoque() - quantidade;
-            Mercadoria newMercadoria = mercadoria;
-            newMercadoria.setQuantidadeEmEstoque(qtd);
-            
-            this.update(mercadoria, newMercadoria);
-        } catch (Exception e) {
-            throw e;
         }
     }
 }

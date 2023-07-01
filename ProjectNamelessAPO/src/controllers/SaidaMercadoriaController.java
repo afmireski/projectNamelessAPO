@@ -22,6 +22,10 @@ public class SaidaMercadoriaController extends ControllerGeneric<SaidaMercadoria
     @Override
     public void create(SaidaMercadoria element) throws Exception {
         try {
+            if (element.getQuantidadeSaida() < 1) {                
+                throw new Exception("A quantidade da saida deve ser maior que 1!");
+            }
+            
             Mercadoria mercadoria = (Mercadoria) this.manager.getDAO(DAOMercadoria.class).retrieve(element.getIdMercadoria());
 
             if (mercadoria == null) {
@@ -32,10 +36,14 @@ public class SaidaMercadoriaController extends ControllerGeneric<SaidaMercadoria
 
             if (funcionario == null) {
                 throw new Exception("O funcionario não existe!");
+            } else if (element.getQuantidadeSaida() > mercadoria.getQuantidadeEmEstoque()) {                
+                throw new Exception("Não é possível retirar mais do que há em estoque!");
             }
 
             //Adiciona um Objeto T a lista;
             manager.getDAO(DAOSaidaMercadoria.class).create(element);
+            ((DAOMercadoria) manager.getDAO(DAOMercadoria.class))
+                    .decrementarEstoque(element.getIdMercadoria(), element.getQuantidadeSaida());
         } catch (Exception e) {
             throw e;
         }

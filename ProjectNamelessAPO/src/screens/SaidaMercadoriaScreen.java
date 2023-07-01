@@ -1,5 +1,6 @@
 package screens;
 
+import controllers.SaidaMercadoriaController;
 import daos.DAOFuncionario;
 import daos.DAOMercadoria;
 import helpers.BuildConfirmDialog;
@@ -76,9 +77,7 @@ public class SaidaMercadoriaScreen extends JDialog {
 //INSTANCIA DOS DAOS
     String actionController;
     boolean listController = false;
-    DAOSaidaMercadoria daoSaidaMercadoria = new DAOSaidaMercadoria();
-    DAOMercadoria daoMercadoria = new DAOMercadoria();
-    DAOFuncionario daoFuncionario = new DAOFuncionario();
+    SaidaMercadoriaController saidaMercadoriaController = new SaidaMercadoriaController();
     
 
 //INSTANCIA DOS LABELS
@@ -105,7 +104,7 @@ public class SaidaMercadoriaScreen extends JDialog {
 
         //LOAD DATA
         final String path = "SaidaMercadoria.csv";
-        daoSaidaMercadoria.loadData(path);
+        saidaMercadoriaController.loadData(path);
 
         buttonsInitialConfiguration();
         textFieldInitialConfiguration();
@@ -165,7 +164,7 @@ public class SaidaMercadoriaScreen extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (!txtId.getText().trim().isEmpty()) {
-                        saidaMercadoria = daoSaidaMercadoria.retrieve(txtId.getText());
+                        saidaMercadoria = saidaMercadoriaController.retrieve(txtId.getText());
                         if (saidaMercadoria != null) {
                             btnCreate.setEnabled(false);
                             btnCreate.setVisible(true);
@@ -236,7 +235,7 @@ public class SaidaMercadoriaScreen extends JDialog {
                         saidaMercadoria.setIdCriador(txtIdCriador.getText());
                     }
 
-                    daoSaidaMercadoria.create(saidaMercadoria);
+                    saidaMercadoriaController.create(saidaMercadoria);
 
                     btnAction.setVisible(false);
                     btnRetrieve.setEnabled(true);
@@ -271,7 +270,7 @@ public class SaidaMercadoriaScreen extends JDialog {
                     saidaMercadoriaTableScreen.dispose();
                     listController = false;
                 }
-                List<SaidaMercadoria> saidaMercadorias = daoSaidaMercadoria.listar();
+                List<SaidaMercadoria> saidaMercadorias = saidaMercadoriaController.listar();
                 saidaMercadoriaTableScreen = new SaidaMercadoriaTableScreen(saidaMercadorias);
                 listController = true;
             }
@@ -299,7 +298,7 @@ public class SaidaMercadoriaScreen extends JDialog {
                     saidaMercadoriaTableScreen.dispose();
                     listController = false;
                 }
-                daoSaidaMercadoria.saveData(path);
+                saidaMercadoriaController.saveData(path);
                 dispose();
             }
         });
