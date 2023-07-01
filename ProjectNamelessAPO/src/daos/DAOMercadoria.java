@@ -10,10 +10,10 @@ import models.Mercadoria;
  * @author afmireski
  */
 public class DAOMercadoria extends DAOGeneric<Mercadoria> {
-
+    
     public DAOMercadoria() {
     }
-
+    
     @Override
     public Mercadoria retrieve(String id) {
         for (int i = 0; i < list.size(); i++) {
@@ -23,7 +23,7 @@ public class DAOMercadoria extends DAOGeneric<Mercadoria> {
         }
         return null;
     }
-
+    
     @Override
     public List<String> getFkList() {
         //GERA UMA LISTA DE STRINGS EM FORMA DE CHAVE ESTRAGEIRA
@@ -34,14 +34,14 @@ public class DAOMercadoria extends DAOGeneric<Mercadoria> {
         }
         return fks;
     }
-
+    
     @Override
     public void loadData(String path) {
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
         if (!manipulaArquivo.existeOArquivo(path)) {
             manipulaArquivo.criarArquivoVazio(path);
         }
-
+        
         List<String> stringList = manipulaArquivo.abrirArquivo(path);
         //converter de CSV para Mercadoria
         Mercadoria mercadoria;
@@ -57,6 +57,54 @@ public class DAOMercadoria extends DAOGeneric<Mercadoria> {
                     cf.converteDeStringParaDate(aux[6]) //dataExclusao
             );
             list.add(mercadoria);
+        }
+    }
+    
+    public void incrementarEstoque(String idMercadoria, int quantidade) throws Exception {
+        
+        try {
+            if (quantidade < 0) {
+                throw new Exception("A quantidade não pode ser negativa!");
+            }
+            
+            Mercadoria mercadoria = this.retrieve(idMercadoria);
+            
+            if (mercadoria == null) {
+                throw new Exception("Mercadoria não encontrada!");
+            }
+            
+            int qtd = mercadoria.getQuantidadeEmEstoque() + quantidade;
+            Mercadoria newMercadoria = mercadoria;
+            newMercadoria.setQuantidadeEmEstoque(qtd);
+            
+            this.update(mercadoria, newMercadoria);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    
+    public void decrementarEstoque(String idMercadoria, int quantidade) throws Exception {
+        
+        try {
+            if (quantidade < 0) {
+                throw new Exception("A quantidade não pode ser negativa!");
+            }
+            
+            Mercadoria mercadoria = this.retrieve(idMercadoria);
+            
+            if (mercadoria == null) {
+                throw new Exception("Mercadoria não encontrada!");
+            } else if (quantidade > mercadoria.getQuantidadeEmEstoque()) {
+                throw new Exception("A quantidade retirada não pode ser maior que o estoque!");
+            }
+            
+            int qtd = mercadoria.getQuantidadeEmEstoque() - quantidade;
+            Mercadoria newMercadoria = mercadoria;
+            newMercadoria.setQuantidadeEmEstoque(qtd);
+            
+            this.update(mercadoria, newMercadoria);
+        } catch (Exception e) {
+            throw e;
         }
     }
 }
