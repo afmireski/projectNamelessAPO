@@ -1,6 +1,5 @@
 package daos;
 
-
 import functions.ConvertToEnum;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +11,7 @@ import tools.ManipulaArquivo;
  * @author afmireski
  */
 public abstract class DAOGeneric<T> {
+
     protected final ConvertToEnum convert = new ConvertToEnum();
     protected final CaixaDeFerramentas cf = new CaixaDeFerramentas();
 

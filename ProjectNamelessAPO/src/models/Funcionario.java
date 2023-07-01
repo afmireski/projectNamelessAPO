@@ -7,24 +7,22 @@ import tools.CaixaDeFerramentas;
  *
  * @author afmireski
  */
-public class Mercadoria {
+public class Funcionario {
 
     private String id;
-    private String idCriador;
-    private String descricao;
-    private int quantidadeEmEstoque;
+    private String nome;
+    private String departamento;
     private Date dataCadastro;
     private Date dataAtualizacao;
     private Date dataExclusao;
 
-    public Mercadoria() {
+    public Funcionario() {
     }
 
-    public Mercadoria(String id, String idCriador, String descricao, int quantidadeEmEstoque, Date dataCadastro, Date dataAtualizacao, Date dataExclusao) {
+    public Funcionario(String id, String nome, String departamento, Date dataCadastro, Date dataAtualizacao, Date dataExclusao) {
         this.id = id;
-        this.idCriador = idCriador;
-        this.descricao = descricao;
-        this.quantidadeEmEstoque = quantidadeEmEstoque;
+        this.nome = nome;
+        this.departamento = departamento;
         this.dataCadastro = dataCadastro;
         this.dataAtualizacao = dataAtualizacao;
         this.dataExclusao = dataExclusao;
@@ -38,28 +36,20 @@ public class Mercadoria {
         this.id = id;
     }
 
-    public String getIdCriador() {
-        return idCriador;
+    public String getNome() {
+        return nome;
     }
 
-    public void setIdCriador(String idCriador) {
-        this.idCriador = idCriador;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getDepartamento() {
+        return departamento;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public int getQuantidadeEmEstoque() {
-        return quantidadeEmEstoque;
-    }
-
-    public void setQuantidadeEmEstoque(int quantidadeEmEstoque) {
-        this.quantidadeEmEstoque = quantidadeEmEstoque;
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
     }
 
     public Date getDataCadastro() {
@@ -89,13 +79,13 @@ public class Mercadoria {
     public String toFk() {
         //GERA UMA STRING PARA SER USADA COMO FK
 
-        return id + " - " + idCriador;
+        return id + " - " + nome;
     }
 
     @Override
     public String toString() {
         CaixaDeFerramentas cf = new CaixaDeFerramentas();
-        return id + ";" + idCriador + ";" + descricao + ";" + quantidadeEmEstoque
+        return id + ";" + nome + ";" + departamento + ";"
                 + ";" + cf.converteDeDateParaString(dataCadastro)
                 + ";" + cf.converteDeDateParaString(dataAtualizacao)
                 + ";" + cf.converteDeDateParaString(dataExclusao);

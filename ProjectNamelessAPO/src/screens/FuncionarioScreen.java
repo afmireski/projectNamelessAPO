@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Date;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -29,15 +30,14 @@ import tools.CaixaDeFerramentas;
 import tools.Tools;
 import enums.DialogMessageType;
 import enums.DialogConfirmType;
-import daos.DAOMercadoria;
-import java.util.Date;
-import models.Mercadoria;
+import daos.DAOFuncionario;
+import models.Funcionario;
 
 /**
  *
  * @author afmireski
  */
-public class MercadoriaScreen extends JDialog {
+public class FuncionarioScreen extends JDialog {
 
 //INSTANCIA DOS HELPERS
     GenericComponents components = new GenericComponents();
@@ -46,9 +46,6 @@ public class MercadoriaScreen extends JDialog {
     ErrorTools errorTools = new ErrorTools();
 
 //INSTANCIA DOS FUNCTIONS
-    ConvertFromEnum convertFromEnum = new ConvertFromEnum();
-    ConvertToEnum convertToEnum = new ConvertToEnum();
-    VerifyPK verifyPK = new VerifyPK();
 
 //INSTANCIA DAS TOOLS
     final private CaixaDeFerramentas cf = new CaixaDeFerramentas();
@@ -72,8 +69,6 @@ public class MercadoriaScreen extends JDialog {
     JPanel panL2C2 = new JPanel(); //Painel referente a posição da grade: Linha 2 - Coluna 2
     JPanel panL3C1 = new JPanel(); //Painel referente a posição da grade: Linha 3 - Coluna 1
     JPanel panL3C2 = new JPanel(); //Painel referente a posição da grade: Linha 3 - Coluna 2
-    JPanel panL4C1 = new JPanel(); //Painel referente a posição da grade: Linha 4 - Coluna 1
-    JPanel panL4C2 = new JPanel(); //Painel referente a posição da grade: Linha 4 - Coluna 2
 
 //INSTANCIA DOS BUTTONS
     JButton btnCreate = new JButton("Create");
@@ -81,40 +76,37 @@ public class MercadoriaScreen extends JDialog {
     JButton btnUpdate = new JButton("Update");
     JButton btnDelete = new JButton("Delete");
     JButton btnAction = new JButton("Add to List");
-    JButton btnRemove = new JButton("Remove");
     JButton btnCancel = new JButton("Cancel");
     JButton btnList = new JButton("List");
 
 //INSTANCIA DOS CONTROLLERS
     String actionController;
     boolean listController = false;
-    DAOMercadoria mercadoriaController = new DAOMercadoria();
+    DAOFuncionario funcionarioController = new DAOFuncionario();
 
 //INSTANCIA DOS LABELS
     JLabel lblId = new JLabel("ID");
-    JLabel lblIdCriador = new JLabel("IDCRIADOR");
-    JLabel lblDescricao = new JLabel("DESCRICAO");
-    JLabel lblQuantidadeEmEstoque = new JLabel("QUANTIDADEEMESTOQUE");
+    JLabel lblNome = new JLabel("NOME");
+    JLabel lblDepartamento = new JLabel("DEPARTAMENTO");
 
 //INSTANCIA DOS TEXTFIELD
     JTextField txtId = new JTextField(16);
-    JTextField txtIdCriador = new JTextField(16);
-    JTextField txtDescricao = new JTextField(20);
-    JTextField txtQuantidadeEmEstoque = new JTextField(10);
+    JTextField txtNome = new JTextField(16);
+    JTextField txtDepartamento = new JTextField(16);
 
 //INSTANCIA DAS ENTIDADES
-    Mercadoria mercadoria = new Mercadoria();
+    Funcionario funcionario = new Funcionario();
 //INSTANCIA DAS TABLE SCREENS
-    MercadoriaTableScreen mercadoriaTableScreen;
+    FuncionarioTableScreen funcionarioTableScreen;
 
-    public MercadoriaScreen() {
+    public FuncionarioScreen() {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setTitle("CRUD - MERCADORIA");
+        setTitle("CRUD - FUNCIONARIO");
 
         //LOAD DATA
-        final String path = "Mercadoria.csv";
-        mercadoriaController.loadData(path);
+        final String path = "Funcionario.csv";
+        funcionarioController.loadData(path);
 
         buttonsInitialConfiguration();
         textFieldInitialConfiguration();
@@ -144,7 +136,7 @@ public class MercadoriaScreen extends JDialog {
 
         //PAN BODY CONFIGURATIONS
         panBody.setBorder(BorderFactory.createLineBorder(Color.black, 5));
-        panBody.setLayout(new GridLayout(4, 2));
+        panBody.setLayout(new GridLayout(3, 2));
 
         //Prenchimento por Linha
         panBody.add(panL1C1);
@@ -153,57 +145,46 @@ public class MercadoriaScreen extends JDialog {
         panBody.add(panL2C2);
         panBody.add(panL3C1);
         panBody.add(panL3C2);
-        panBody.add(panL4C1);
-        panBody.add(panL4C2);
 
         //Prenchimento Linha 1
-        panL1C1.add(lblIdCriador);
-        panL1C2.add(txtIdCriador);
+        panL1C1.add(lblNome);
+        panL1C2.add(txtNome);
 
         //Prenchimento Linha 2
-        panL2C1.add(lblDescricao);
-        panL2C2.add(txtDescricao);
+        panL2C1.add(lblDepartamento);
+        panL2C2.add(txtDepartamento);
 
-        //Prenchimento Linha 3
-        panL3C1.add(lblQuantidadeEmEstoque);
-        panL3C2.add(txtQuantidadeEmEstoque);
-
-        //Prenchimento Linha 4
-        panL4C2.add(btnAction);
+        panL3C2.add(btnAction);
         //BTN RETRIEVE ACTION LISTENER
         btnRetrieve.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (!txtId.getText().trim().isEmpty()) {
-                        mercadoria = mercadoriaController.retrieve(txtId.getText());
-                        if (mercadoria != null) {
+                        funcionario = funcionarioController.retrieve(txtId.getText());
+                        if (funcionario != null) {
                             btnCreate.setEnabled(false);
                             btnCreate.setVisible(true);
                             btnUpdate.setEnabled(true);
                             btnUpdate.setVisible(true);
                             btnDelete.setEnabled(true);
 
-                            txtIdCriador.setEditable(false);
-                            txtDescricao.setEditable(false);
-                            txtQuantidadeEmEstoque.setEditable(false);
+                            txtNome.setEditable(false);
+                            txtDepartamento.setEditable(false);
 
-                            txtId.setText(String.valueOf(mercadoria.getId()));
-                            txtIdCriador.setText(String.valueOf(mercadoria.getIdCriador()));
-                            txtDescricao.setText(String.valueOf(mercadoria.getDescricao()));
-                            txtQuantidadeEmEstoque.setText(String.valueOf(mercadoria.getQuantidadeEmEstoque()));
+                            txtId.setText(String.valueOf(funcionario.getId()));
+                            txtNome.setText(String.valueOf(funcionario.getNome()));
+                            txtDepartamento.setText(String.valueOf(funcionario.getDepartamento()));
                         } else {
                             btnCreate.setEnabled(true);
                             btnCreate.setVisible(true);
                             btnUpdate.setEnabled(false);
                             btnDelete.setEnabled(false);
 
-                            txtIdCriador.setEditable(true);
-                            txtDescricao.setEditable(true);
-                            txtQuantidadeEmEstoque.setEditable(true);
-                            txtIdCriador.setText("");
-                            txtDescricao.setText("");
-                            txtQuantidadeEmEstoque.setText("");
+                            txtNome.setEditable(true);
+                            txtDepartamento.setEditable(true);
+                            txtNome.setText("");
+                            txtDepartamento.setText("");
                         }
                     }
                 } catch (Exception excep) {
@@ -229,7 +210,7 @@ public class MercadoriaScreen extends JDialog {
                 btnAction.setVisible(true);
 
                 txtId.setEditable(false);
-                txtIdCriador.requestFocus();
+                txtNome.requestFocus();
 
                 actionController = "CREATE";
 
@@ -249,10 +230,9 @@ public class MercadoriaScreen extends JDialog {
                 btnAction.setVisible(true);
 
                 txtId.setEditable(false);
-                txtIdCriador.setEditable(true);
-                txtDescricao.setEditable(true);
-                txtQuantidadeEmEstoque.setEditable(true);
-                txtIdCriador.requestFocus();
+                txtNome.setEditable(true);
+                txtDepartamento.setEditable(true);
+                txtNome.requestFocus();
 
                 actionController = "UPDATE";
 
@@ -266,29 +246,27 @@ public class MercadoriaScreen extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (actionController.equalsIgnoreCase("CREATE")) {
-                        mercadoria = new Mercadoria();
+                        funcionario = new Funcionario();
                     }
-                    Mercadoria mercadoriaAntigo = mercadoria;
-                    if (txtIdCriador.getText().trim().isEmpty() || txtDescricao.getText().trim().isEmpty()
-                            || txtQuantidadeEmEstoque.getText().trim().isEmpty()) {
+                    Funcionario funcionarioAntigo = funcionario;
+                    if (txtNome.getText().trim().isEmpty() || txtDepartamento.getText().trim().isEmpty()) {
                         throw new Exception("Verifique se os seus campos estão preenchidos!");
                     } else {
-                        mercadoria.setId(txtId.getText());
-                        mercadoria.setIdCriador(txtIdCriador.getText());
-                        mercadoria.setDescricao(txtDescricao.getText());
-                        mercadoria.setQuantidadeEmEstoque(Integer.valueOf(txtQuantidadeEmEstoque.getText()));
-                        mercadoria.setDataAtualizacao(new Date());
-                        mercadoria.setDataExclusao(null);
+                        funcionario.setId(txtId.getText());
+                        funcionario.setNome(txtNome.getText());
+                        funcionario.setDepartamento(txtDepartamento.getText());
+                        funcionario.setDataAtualizacao(new Date());
+                        funcionario.setDataExclusao(null);
                     }
                     if (actionController.equalsIgnoreCase("CREATE")) {
-                        mercadoria.setDataCadastro(new Date());
-                        System.out.println(mercadoria.toString());
-                        mercadoriaController.create(mercadoria);
-                        System.out.println("MERCADORIA ADICIONADO!");
+                        funcionario.setDataCadastro(new Date());
+                        System.out.println(funcionario.toString());
+                        funcionarioController.create(funcionario);
+                        System.out.println("FUNCIONARIO ADICIONADO!");
                     } else if (actionController.equalsIgnoreCase("UPDATE")) {
-                        System.out.println("MERCADORIA => " + mercadoria.toString());
-                        System.out.println("MERCADORIA ANTIGO => " + mercadoriaAntigo.toString());
-                        mercadoriaController.update(mercadoriaAntigo, mercadoria);
+                        System.out.println("FUNCIONARIO => " + funcionario.toString());
+                        System.out.println("FUNCIONARIO ANTIGO => " + funcionarioAntigo.toString());
+                        funcionarioController.update(funcionarioAntigo, funcionario);
                         System.out.println("LISTA ATUALIZADA!");
                     } else {
 
@@ -347,14 +325,14 @@ public class MercadoriaScreen extends JDialog {
                     txtId.requestFocus();
 
                     clearAllFields();
-                    mercadoriaController.delete(mercadoria);
+                    funcionarioController.delete(funcionario);
 
                     messageDialog = new BuildMessageDialog(
                             DialogMessageType.SUCESS,
-                            "MERCADORIA EXCLUÍDO COM SUCESSO",
+                            "FUNCIONARIO EXCLUÍDO COM SUCESSO",
                             "DELETE",
                             container);
-                    System.out.println("MERCADORIA EXCLUÍDO");
+                    System.out.println("FUNCIONARIO EXCLUÍDO");
                 }
             }
         });
@@ -366,11 +344,11 @@ public class MercadoriaScreen extends JDialog {
                 // A JANELA TABELA SÓ PODE SER ABERTA SE TABLESCREEN NÃO ESTIVER ATIVA.
                 if (listController) {
                     //SE TABLE SCREEN ESTIVER ATIVA, A FECHA ANTES DE ABRIR NOVAMENTE.
-                    mercadoriaTableScreen.dispose();
+                    funcionarioTableScreen.dispose();
                     listController = false;
                 }
-                List<Mercadoria> mercadorias = mercadoriaController.listar();
-                mercadoriaTableScreen = new MercadoriaTableScreen(mercadorias);
+                List<Funcionario> funcionarios = funcionarioController.listar();
+                funcionarioTableScreen = new FuncionarioTableScreen(funcionarios);
                 listController = true;
             }
         });
@@ -394,10 +372,10 @@ public class MercadoriaScreen extends JDialog {
             public void windowClosing(WindowEvent e) {
                 if (listController) {
                     //SE TABLE SCREEN ESTIVER ATIVA, A FECHA ANTES DE ABRIR NOVAMENTE.
-                    mercadoriaTableScreen.dispose();
+                    funcionarioTableScreen.dispose();
                     listController = false;
                 }
-                mercadoriaController.saveData(path);
+                funcionarioController.saveData(path);
                 dispose();
             }
         });
@@ -419,17 +397,15 @@ public class MercadoriaScreen extends JDialog {
 
     private void textFieldInitialConfiguration() {	//TEXTFIELD INITIAL CONFIGURATIONS
         txtId.setEditable(true);
-        txtIdCriador.setEditable(false);
-        txtDescricao.setEditable(false);
-        txtQuantidadeEmEstoque.setEditable(false);
+        txtNome.setEditable(false);
+        txtDepartamento.setEditable(false);
     }
 
     private void clearAllFields() {
 
         txtId.setText("");
-        txtIdCriador.setText("");
-        txtDescricao.setText("");
-        txtQuantidadeEmEstoque.setText("");
+        txtNome.setText("");
+        txtDepartamento.setText("");
     }
 
 }
