@@ -1,8 +1,6 @@
 package screens;
 
-import functions.ConvertToEnum;
-import functions.ConvertFromEnum;
-import functions.VerifyPK;
+import controllers.FuncionarioController;
 import helpers.BuildConfirmDialog;
 import helpers.BuildMessageDialog;
 import helpers.ErrorTools;
@@ -22,14 +20,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import tools.CaixaDeFerramentas;
 import tools.Tools;
 import enums.DialogMessageType;
-import enums.DialogConfirmType;
 import daos.DAOFuncionario;
 import models.Funcionario;
 
@@ -73,7 +69,6 @@ public class FuncionarioScreen extends JDialog {
     JButton btnCreate = new JButton("Create");
     JButton btnRetrieve = new JButton("Retrieve");
     JButton btnUpdate = new JButton("Update");
-    JButton btnDelete = new JButton("Delete");
     JButton btnAction = new JButton("Add to List");
     JButton btnCancel = new JButton("Cancel");
     JButton btnList = new JButton("List");
@@ -81,7 +76,7 @@ public class FuncionarioScreen extends JDialog {
 //INSTANCIA DOS CONTROLLERS
     String actionController;
     boolean listController = false;
-    DAOFuncionario funcionarioController = new DAOFuncionario();
+    FuncionarioController funcionarioController = new FuncionarioController();
 
 //INSTANCIA DOS LABELS
     JLabel lblId = new JLabel("ID");
@@ -127,7 +122,6 @@ public class FuncionarioScreen extends JDialog {
         panNorth.add(btnRetrieve);
         panNorth.add(btnCreate);
         panNorth.add(btnUpdate);
-        panNorth.add(btnDelete);
         panNorth.add(btnList);
         panNorth.add(btnCancel);
         //PAN EAST CONFIGURATIONS
@@ -166,7 +160,6 @@ public class FuncionarioScreen extends JDialog {
                             btnCreate.setVisible(true);
                             btnUpdate.setEnabled(true);
                             btnUpdate.setVisible(true);
-                            btnDelete.setEnabled(true);
 
                             txtNome.setEditable(false);
                             txtDepartamento.setEditable(false);
@@ -178,7 +171,6 @@ public class FuncionarioScreen extends JDialog {
                             btnCreate.setEnabled(true);
                             btnCreate.setVisible(true);
                             btnUpdate.setEnabled(false);
-                            btnDelete.setEnabled(false);
 
                             txtNome.setEditable(true);
                             txtDepartamento.setEditable(true);
@@ -203,7 +195,6 @@ public class FuncionarioScreen extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 btnRetrieve.setEnabled(false);
                 btnUpdate.setEnabled(false);
-                btnDelete.setEnabled(false);
                 btnCreate.setVisible(false);
                 btnCancel.setVisible(true);
                 btnAction.setVisible(true);
@@ -223,7 +214,6 @@ public class FuncionarioScreen extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 btnRetrieve.setEnabled(false);
                 btnUpdate.setEnabled(false);
-                btnDelete.setEnabled(false);
                 btnCreate.setVisible(false);
                 btnCancel.setVisible(true);
                 btnAction.setVisible(true);
@@ -299,42 +289,6 @@ public class FuncionarioScreen extends JDialog {
         });
 
         //BTN DELETE ACTION LISTENER
-        btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                confirmDialog = new BuildConfirmDialog(
-                        DialogConfirmType.YES_NO,
-                        "Deseja realmente excluir estes dados da lista?",
-                        "Confirmar Exclusão");
-
-                int response = confirmDialog.getResponse();
-
-                if (response == JOptionPane.YES_OPTION) {
-                    btnRetrieve.setEnabled(false);
-                    btnUpdate.setEnabled(false);
-                    btnDelete.setEnabled(false);
-                    btnCreate.setEnabled(false);
-
-                    actionController = "DELETE";
-                    btnAction.setVisible(false);
-                    btnRetrieve.setEnabled(true);
-
-                    txtId.setEditable(true);
-                    textFieldInitialConfiguration();
-                    txtId.requestFocus();
-
-                    clearAllFields();
-                    funcionarioController.delete(funcionario);
-
-                    messageDialog = new BuildMessageDialog(
-                            DialogMessageType.SUCESS,
-                            "FUNCIONARIO EXCLUÍDO COM SUCESSO",
-                            "DELETE",
-                            container);
-                    System.out.println("FUNCIONARIO EXCLUÍDO");
-                }
-            }
-        });
 
         //BTN LIST ACTION LISTENER
         btnList.addActionListener(new ActionListener() {
@@ -391,7 +345,6 @@ public class FuncionarioScreen extends JDialog {
         btnCreate.setEnabled(false);
         btnAction.setVisible(false);
         btnUpdate.setEnabled(false);
-        btnDelete.setEnabled(false);
     }
 
     private void textFieldInitialConfiguration() {	//TEXTFIELD INITIAL CONFIGURATIONS
