@@ -2,6 +2,8 @@ package daos;
 
 import java.util.ArrayList;
 import java.util.List;
+import models.Funcionario;
+import models.Mercadoria;
 import tools.ManipulaArquivo;
 import models.SaidaMercadoria;
 
@@ -9,8 +11,8 @@ import models.SaidaMercadoria;
  *
  * @author afmireski
  */
-public class DAOSaidaMercadoria extends DAOGeneric<SaidaMercadoria>{
-    
+public class DAOSaidaMercadoria extends DAOGeneric<SaidaMercadoria> {
+
     public DAOSaidaMercadoria() {
     }
 
@@ -34,7 +36,7 @@ public class DAOSaidaMercadoria extends DAOGeneric<SaidaMercadoria>{
         }
         return fks;
     }
-    
+
     @Override
     public void loadData(String path) {
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();

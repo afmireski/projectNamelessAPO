@@ -1,5 +1,7 @@
 package screens;
 
+import daos.DAOFuncionario;
+import daos.DAOMercadoria;
 import helpers.BuildConfirmDialog;
 import helpers.BuildMessageDialog;
 import helpers.ErrorTools;
@@ -71,10 +73,13 @@ public class SaidaMercadoriaScreen extends JDialog {
     JButton btnCancel = new JButton("Cancel");
     JButton btnList = new JButton("List");
 
-//INSTANCIA DOS CONTROLLERS
+//INSTANCIA DOS DAOS
     String actionController;
     boolean listController = false;
     DAOSaidaMercadoria daoSaidaMercadoria = new DAOSaidaMercadoria();
+    DAOMercadoria daoMercadoria = new DAOMercadoria();
+    DAOFuncionario daoFuncionario = new DAOFuncionario();
+    
 
 //INSTANCIA DOS LABELS
     JLabel lblId = new JLabel("ID");

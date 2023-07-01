@@ -16,8 +16,10 @@ public abstract class DAOGeneric<T> {
     protected final CaixaDeFerramentas cf = new CaixaDeFerramentas();
 
     protected List<T> list = new ArrayList<T>();
+    
+    protected DAOManager manager;
 
-    public DAOGeneric() {
+    public DAOGeneric() {        
     }
 
     public void clearList() {
