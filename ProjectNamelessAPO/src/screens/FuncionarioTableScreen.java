@@ -60,7 +60,7 @@ public class FuncionarioTableScreen extends JDialog {
 
         panBody.setLayout(new GridLayout(1, 1));
 //TABELA
-        String colunas[] = new String[]{"ID", "NOME", "DEPARTAMENTO", "DATACADASTRO", "DATAATUALIZACAO", "DATAEXCLUSAO"};
+        String colunas[] = new String[]{"ID", "NOME", "DEPARTAMENTO", "DATACADASTRO", "DATA ATUALIZACAO", "DATA EXCLUSAO"};
         Object dados[][] = new Object[this.funcionarios.size()][colunas.length];
 
         String aux[];

@@ -55,6 +55,7 @@ public class DAOFuncionario extends DAOGeneric<Funcionario> {
                     cf.converteDeStringParaDate(aux[4]), //dataAtualizacao
                     cf.converteDeStringParaDate(aux[5]) //dataExclusao
             );
+            System.out.println(funcionario.toString());
             list.add(funcionario);
         }
     }

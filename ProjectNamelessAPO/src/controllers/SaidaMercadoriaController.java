@@ -3,6 +3,7 @@ package controllers;
 import daos.DAOFuncionario;
 import daos.DAOMercadoria;
 import daos.DAOSaidaMercadoria;
+import java.util.Date;
 import java.util.List;
 import models.Funcionario;
 import models.Mercadoria;
@@ -46,6 +47,7 @@ public class SaidaMercadoriaController extends ControllerGeneric<SaidaMercadoria
             }
 
             //Adiciona um Objeto T a lista;
+            element.setDataSaida(new Date());
             manager.getDAO(DAOSaidaMercadoria.class).create(element);
             ((DAOMercadoria) manager.getDAO(DAOMercadoria.class))
                     .decrementarEstoque(element.getIdMercadoria(), element.getQuantidadeSaida());

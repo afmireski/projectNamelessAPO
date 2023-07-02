@@ -85,7 +85,7 @@ public class Funcionario {
     @Override
     public String toString() {
         CaixaDeFerramentas cf = new CaixaDeFerramentas();
-        return id + ";" + nome + ";" + departamento + ";"
+        return id + ";" + nome + ";" + departamento 
                 + ";" + cf.converteDeDateParaString(dataCadastro)
                 + ";" + cf.converteDeDateParaString(dataAtualizacao)
                 + ";" + cf.converteDeDateParaString(dataExclusao);

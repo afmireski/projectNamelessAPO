@@ -249,19 +249,17 @@ public class FuncionarioScreen extends JDialog {
                     }
                     if (actionController.equalsIgnoreCase("CREATE")) {
                         funcionario.setDataCadastro(new Date());
-                        System.out.println(funcionario.toString());
                         funcionarioController.create(funcionario);
-                        System.out.println("FUNCIONARIO ADICIONADO!");
                     } else if (actionController.equalsIgnoreCase("UPDATE")) {
-                        System.out.println("FUNCIONARIO => " + funcionario.toString());
-                        System.out.println("FUNCIONARIO ANTIGO => " + funcionarioAntigo.toString());
+                        funcionario.setDataCadastro(funcionarioAntigo.getDataCadastro());
                         funcionarioController.update(funcionarioAntigo, funcionario);
-                        System.out.println("LISTA ATUALIZADA!");
                     } else {
 
                         throw new Exception("Falha ao executar a ação na lista");
 
                     }
+                    
+                    System.out.println(funcionario.toString());
 
                     btnAction.setVisible(false);
                     btnRetrieve.setEnabled(true);

@@ -259,14 +259,9 @@ public class MercadoriaScreen extends JDialog {
                     }
                     if (actionController.equalsIgnoreCase("CREATE")) {
                         mercadoria.setDataCadastro(new Date());
-                        System.out.println(mercadoria.toString());
                         mercadoriaController.create(mercadoria);
-                        System.out.println("MERCADORIA ADICIONADO!");
                     } else if (actionController.equalsIgnoreCase("UPDATE")) {
-                        System.out.println("MERCADORIA => " + mercadoria.toString());
-                        System.out.println("MERCADORIA ANTIGO => " + mercadoriaAntigo.toString());
                         mercadoriaController.update(mercadoriaAntigo, mercadoria);
-                        System.out.println("LISTA ATUALIZADA!");
                     } else {
 
                         throw new Exception("Falha ao executar a ação na lista");
