@@ -1,6 +1,6 @@
 package main;
 
-import screens.SaidaMercadoriaScreen;
+import screens.MainScreen;
 
 /**
  *
@@ -12,6 +12,6 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        SaidaMercadoriaScreen saidaMercadoriaScreen = new SaidaMercadoriaScreen();
+        new MainScreen();
     }
 }

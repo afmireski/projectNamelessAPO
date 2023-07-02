@@ -13,6 +13,9 @@ import models.SaidaMercadoria;
  * @author afmireski
  */
 public class SaidaMercadoriaController extends ControllerGeneric<SaidaMercadoria> {
+    
+    private String mercadoriaPath = "Mercadoria.csv";
+    private String funcionarioPath = "Funcionario.csv";
 
     @Override
     public void clearList() {
@@ -26,12 +29,14 @@ public class SaidaMercadoriaController extends ControllerGeneric<SaidaMercadoria
                 throw new Exception("A quantidade da saida deve ser maior que 1!");
             }
             
+            this.manager.getDAO(DAOMercadoria.class).loadData(mercadoriaPath);
             Mercadoria mercadoria = (Mercadoria) this.manager.getDAO(DAOMercadoria.class).retrieve(element.getIdMercadoria());
 
             if (mercadoria == null) {
                 throw new Exception("A mercadoria não existe!");
             }
 
+            this.manager.getDAO(DAOFuncionario.class).loadData(funcionarioPath);
             Funcionario funcionario = (Funcionario) this.manager.getDAO(DAOFuncionario.class).retrieve(element.getIdCriador());
 
             if (funcionario == null) {
@@ -44,6 +49,7 @@ public class SaidaMercadoriaController extends ControllerGeneric<SaidaMercadoria
             manager.getDAO(DAOSaidaMercadoria.class).create(element);
             ((DAOMercadoria) manager.getDAO(DAOMercadoria.class))
                     .decrementarEstoque(element.getIdMercadoria(), element.getQuantidadeSaida());
+            ((DAOMercadoria) manager.getDAO(DAOMercadoria.class)).saveData(mercadoriaPath);
         } catch (Exception e) {
             throw e;
         }

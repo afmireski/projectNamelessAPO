@@ -82,7 +82,7 @@ public class DAOMercadoria extends DAOGeneric<Mercadoria> {
             Mercadoria mercadoria = list.get(i);
             if (mercadoria.getId().equals(idMercadoria)) {
 
-                if (quantidade < mercadoria.getQuantidadeEmEstoque()) {
+                if (mercadoria.getQuantidadeEmEstoque() < quantidade) {
                     throw new Exception("Não é possível retirar mais do que se tem em estoque");
                 }
                 int qtd = mercadoria.getQuantidadeEmEstoque() - quantidade;

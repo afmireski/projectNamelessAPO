@@ -233,6 +233,7 @@ public class SaidaMercadoriaScreen extends JDialog {
                         saidaMercadoria.setId(txtId.getText());
                         saidaMercadoria.setIdMercadoria(txtIdMercadoria.getText());
                         saidaMercadoria.setIdCriador(txtIdCriador.getText());
+                        saidaMercadoria.setQuantidadeSaida(Integer.valueOf(txtQuantidadeSaida.getText().trim()));
                     }
 
                     saidaMercadoriaController.create(saidaMercadoria);

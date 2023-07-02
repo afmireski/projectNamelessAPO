@@ -1,9 +1,6 @@
 package screens;
 
 import controllers.MercadoriaController;
-import functions.ConvertToEnum;
-import functions.ConvertFromEnum;
-import functions.VerifyPK;
 import helpers.BuildConfirmDialog;
 import helpers.BuildMessageDialog;
 import helpers.ErrorTools;
@@ -22,12 +19,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
-import tools.CaixaDeFerramentas;
-import tools.Tools;
 import enums.DialogMessageType;
 import java.util.Date;
 import models.Mercadoria;
@@ -43,15 +37,6 @@ public class MercadoriaScreen extends JDialog {
     BuildMessageDialog messageDialog;
     BuildConfirmDialog confirmDialog;
     ErrorTools errorTools = new ErrorTools();
-
-//INSTANCIA DOS FUNCTIONS
-    ConvertFromEnum convertFromEnum = new ConvertFromEnum();
-    ConvertToEnum convertToEnum = new ConvertToEnum();
-    VerifyPK verifyPK = new VerifyPK();
-
-//INSTANCIA DAS TOOLS
-    final private CaixaDeFerramentas cf = new CaixaDeFerramentas();
-    Tools tools = new Tools();
 
 //INSTANCIA DOS CONTAINERS
     Container container;

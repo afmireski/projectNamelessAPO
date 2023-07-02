@@ -13,6 +13,8 @@ import models.Mercadoria;
  * @author afmireski
  */
 public class MercadoriaController extends ControllerGeneric<Mercadoria> {
+    
+    private String funcionarioPath = "Funcionario.csv";
 
     @Override
     public void clearList() {
@@ -25,7 +27,8 @@ public class MercadoriaController extends ControllerGeneric<Mercadoria> {
             if (element.getQuantidadeEmEstoque() < 0) {                
                 throw new Exception("O estoque não pode ser negativo!");
             }
-
+            
+            this.manager.getDAO(DAOFuncionario.class).loadData(funcionarioPath);
             Funcionario funcionario = (Funcionario) this.manager.getDAO(DAOFuncionario.class).retrieve(element.getIdCriador());
 
             if (funcionario == null) {
@@ -56,6 +59,7 @@ public class MercadoriaController extends ControllerGeneric<Mercadoria> {
                 throw new Exception("O estoque não pode ser negativo!");
             }
 
+            this.manager.getDAO(DAOFuncionario.class).loadData(funcionarioPath);
             Funcionario funcionario = (Funcionario) this.manager.getDAO(DAOFuncionario.class).retrieve(newT.getIdCriador());
 
             if (funcionario == null) {
